@@ -50,45 +50,43 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Input form layout
-with st.form("laptop_form"):
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        brand = st.selectbox("Company", ['Acer', 'Asus', 'Dell', 'HP', 'Lenovo'])
-        typename = st.selectbox("TypeName", ["2 in 1 Convertible", "Notebook", "Gaming"])
-        ram = st.selectbox("RAM", ['4GB', '8GB', '12GB', '16GB', '32GB'])
-        screen_resolution = st.selectbox("Screen Resolution", ['1366x768', '1920x1080', '2560x1440', '3840x2160'])
+# Input section layout
+st.markdown("### Enter Laptop Specifications ###")
+col1, col2 = st.columns(2)
 
-    with col2:
-        inches = st.number_input("Screen Size (Inches)", min_value=10.0, max_value=20.0, step=0.1)
-        memory = st.selectbox("Memory", ["256GB SSD", "512GB SSD", "1.0TB HDD", "2.0TB HDD"])
-        weight = st.slider("Weight (KG)", 0.5, 5.0, step=0.1)
-        opsys = st.selectbox("Operating System", ["Windows", "MacOS", "Linux", "Android", "Other"])
-    
-    submitted = st.form_submit_button("Predict")
+with col1:
+    brand = st.selectbox("Brand", ['Acer', 'Asus', 'Dell', 'HP', 'Lenovo'])
+    speed = st.slider("Processor Speed (GHz)", 1.5, 4.0, step=0.1)
+    ram = st.slider("RAM (GB)", 4, 32)
 
-# Process inputs and make predictions
-if submitted:
-    # Encode brand as one-hot
-    brand_columns = ['Brand_Acer', 'Brand_Asus', 'Brand_Dell', 'Brand_HP', 'Brand_Lenovo']
-    brand_input = [0] * len(brand_columns)
-    brand_input[brand_columns.index(f'Brand_{brand}')] = 1
+with col2:
+    storage = st.slider("Storage (GB)", 256, 1000)
+    screen_size = st.slider("Screen Size (In)", 11, 17)
+    weight = st.slider("Weight (KG)", 2, 5)
 
-    # Combine inputs for prediction
-    input_data = np.array([
-        float(inches), float(ram.replace("GB", "")), 
-        weight, screen_resolution, typename, memory, opsys
-    ] + brand_input).reshape(1, -1)
-    
+# Encode brand as one-hot
+brand_columns = ['Brand_Acer', 'Brand_Asus', 'Brand_Dell', 'Brand_HP', 'Brand_Lenovo']
+brand_input = [0] * len(brand_columns)
+brand_input[brand_columns.index(f'Brand_{brand}')] = 1
+
+# Combine inputs
+input_data = np.array([speed, ram, storage, screen_size, weight] + brand_input).reshape(1, -1)
+
+# Display input data summary
+st.markdown("### Your Laptop Specifications ###")
+st.table({
+    "Specification": ["Brand", "Processor Speed (GHz)", "RAM (GB)", "Storage (GB)", "Screen Size (In)", "Weight (KG)"],
+    "Value": [brand, speed, ram, storage, screen_size, weight]
+})
+
+# Prediction button and result display
+if st.button("💻 Predict Price 💻"):
     with st.spinner("Calculating price..."):
-        prediction = model.predict(input_data)[0]
-        
-    # Display results
+        prediction = model.predict(input_data)
     st.markdown(
         f"""
         <div class="prediction-box">
-        Price (Euros): <strong>€{prediction:,.2f}</strong>
+        Predicted Price: <strong>€{prediction[0]:,.2f}</strong>
         </div>
         """,
         unsafe_allow_html=True,
