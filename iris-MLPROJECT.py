@@ -65,4 +65,4 @@ st.table({
 if st.button("💻 Predict Price 💻"):
     with st.spinner("Calculating price..."):
         prediction = model.predict(input_data)
-        st.success(f"The predicted price for the laptop is: **${prediction[0]:,.2f}**")
+        st.success(f"The predicted price for the laptop is: ** ₽{prediction[0]:,.2f}**")
