@@ -10,18 +10,10 @@ st.markdown(
     """
     <style>
 
-     body {
-        background-image: "laptopbackground.jpg";
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
-    }
-
     .title {
         font-size: 36px;
         font-weight: bold;
-        color: #4CAF50;
+        color: pink;
         text-align: center;
         margin-bottom: 10px;
     }
@@ -29,14 +21,14 @@ st.markdown(
         font-size: 18px;
         text-align: center;
         margin-bottom: 30px;
-        color: #555555;
+        color: white;
     }
     .prediction-box {
         background-color: #00CFFF;
         padding: 20px;
         border-radius: 10px;
         text-align: center;
-        color: white;
+        color: black;
         font-size: 20px;
         margin-top: 20px;
     }
